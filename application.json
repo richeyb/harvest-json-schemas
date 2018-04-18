@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://developers.greenhouse.io/harvest/schemas/application.json",
+  "title": "Greenhouse Application Object",
+  "description": "This is a Greenhouse Application Object from Harvest",
+  "definitions": {
+    "custom": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "number" },
+        "name": { "type": "string" }
+      }
+    },
+    "referrer": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": ["number", "null"] },
+        "name": { "type": ["string", "null"] },
+        "employee_id": { "type": ["string", "null"] }
+      }
+    },
+    "timestamp": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z"
+    },
+    "source": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "number" },
+        "public_name": { "type": "string" }
+      }
+    },
+    "answer": {
+      "type": "object",
+      "properties": {
+        "question": { "type": "string" },
+        "answer": { "type": "string" }
+      }
+    },
+    "custom_field": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": ["string", "object", "array", "number", "null", "boolean"]
+        }
+      },
+      "additionalProperties": true,
+      "minProperties": 1
+    },
+    "keyed_custom_field": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "value": { "type": ["string", "object", "array", "number", "null", "boolean"] }
+          }
+        }
+      },
+      "additionalProperties": true,
+      "minProperties": 1
+    }
+  },
+  "properties": {
+    "id": { "type": "number" },
+    "candidate_id": { "type": "number" },
+    "prospect": { "type": "boolean" },
+    "applied_at": { "$ref": "#/definitions/timestamp" },
+    "rejected_at": { "$ref": "#/definitions/timestamp" },
+    "last_activity_at": { "$ref": "#/definitions/timestamp" },
+    "location": {
+      "type": ["object", "null"],
+      "properties": {
+        "address": { "type": "string" }
+      }
+    },
+    "source": { "$ref": "#/definitions/source" },
+    "credited_to": { "$ref": "#/definitions/referrer" },
+    "rejection_reason": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "number" },
+        "name": { "type": "string" },
+        "type": { "$ref": "#/definitions/custom" }
+      }
+    },
+    "rejection_details": { "type": ["string", "null"] },
+    "jobs": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/custom" }
+    },
+    "status": { "type": "string", "enum": ["active", "rejected", "hired"] },
+    "current_stage": { "$ref": "#/definitions/custom" },
+    "answers": {
+      "type": ["array", "null"],
+      "items": { "$ref": "#/definitions/answer" }
+    },
+    "custom_fields": {
+      "$ref": "#/definitions/custom_field"
+    },
+    "keyed_custom_fields": {
+      "$ref": "#/definitions/keyed_custom_field"
+    }
+  }
+}
